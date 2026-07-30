@@ -25,9 +25,9 @@ export async function GET(req: NextRequest) {
       }
       case "sources": {
         const episodeId = searchParams.get("episodeId") || "";
-        const server = searchParams.get("server") || "vidstreaming";
-        const category = (searchParams.get("category") || "sub") as "sub" | "dub" | "raw";
-        const data = await scraper.getEpisodeSources(episodeId, server as "vidstreaming", category);
+        const server = (searchParams.get("server") || "vidstreaming") as Parameters<typeof scraper.getEpisodeSources>[1];
+        const category = (searchParams.get("category") || "sub") as Parameters<typeof scraper.getEpisodeSources>[2];
+        const data = await scraper.getEpisodeSources(episodeId, server, category);
         return NextResponse.json({ success: true, data });
       }
       case "search": {
