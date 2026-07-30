@@ -74,16 +74,9 @@ export interface SearchResult {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractId(raw: string): string {
-  if (!raw) return "";
-  const match = raw.match(/\/anime\/([^/]+)/);
-  if (match) return match[1];
-  return raw.replace(/^https?:\/\/[^/]+\//, "").replace(/\/$/, "");
-}
-
 function normalizeAnime(item: any): Anime {
   return {
-    id: extractId(item.id || item.data_id || ""),
+    id: item.id || item.data_id || "",
     name: item.name || item.title || "",
     jname: item.jname || item.japanese_title || "",
     poster: item.poster || "",
@@ -118,7 +111,7 @@ export async function getHome() {
 
 export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await apiFetch(`/api/info/${id}`);
+  const data: any = await apiFetch(`/api/info?id=${encodeURIComponent(id)}`);
   const info = data.anime?.info || {};
   const moreInfo = data.anime?.moreInfo || {};
   return {
@@ -144,7 +137,7 @@ export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
 
 export async function getEpisodes(id: string): Promise<EpisodesData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await apiFetch(`/api/episodes/${id}`);
+  const data: any = await apiFetch(`/api/episodes?id=${encodeURIComponent(id)}`);
   return {
     totalEpisodes: data.totalEpisodes || data.episodes?.length || 0,
     episodes: (data.episodes || []).map((ep: Episode) => ({
@@ -174,10 +167,11 @@ export async function getStreamSources(
   category?: string
 ): Promise<StreamSource> {
   const params = new URLSearchParams();
+  params.set("id", episodeId);
   if (server) params.set("server", server);
   if (category) params.set("category", category);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await apiFetch(`/api/sources/${episodeId}?${params}`);
+  const data: any = await apiFetch(`/api/sources?${params}`);
   return {
     sources: data.sources || [],
     tracks: data.tracks || [],
