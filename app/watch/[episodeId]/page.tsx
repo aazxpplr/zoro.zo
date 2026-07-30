@@ -39,12 +39,12 @@ export default async function WatchPage({ params, searchParams }: Props) {
     notFound();
   }
 
-  const episodes = episodesData?.data.episodes ?? [];
+  const episodes = episodesData?.episodes ?? [];
   const currentIdx = episodes.findIndex((e) => e.episodeId === episodeId);
   const prevEp = currentIdx > 0 ? episodes[currentIdx - 1] : null;
   const nextEp = currentIdx >= 0 && currentIdx < episodes.length - 1 ? episodes[currentIdx + 1] : null;
   const currentEp = currentIdx >= 0 ? episodes[currentIdx] : null;
-  const animeInfo = animeData?.data.anime.info;
+  const animeInfo = animeData?.anime.info;
 
   const categories = ["sub", "dub", "raw"];
 
@@ -65,10 +65,10 @@ export default async function WatchPage({ params, searchParams }: Props) {
         {/* Player area */}
         <div className="lg:col-span-3 space-y-4">
           <VideoPlayer
-            sources={sources.data.sources}
-            tracks={sources.data.tracks}
-            intro={sources.data.intro}
-            outro={sources.data.outro}
+            sources={sources.sources}
+            tracks={sources.tracks}
+            intro={sources.intro}
+            outro={sources.outro}
           />
 
           {/* Controls */}

@@ -32,8 +32,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
   let data;
   try {
-    const res = await searchAnime(keyword, page);
-    data = res.data;
+    data = await searchAnime(keyword, page);
   } catch {
     return (
       <div className="max-w-[1400px] mx-auto px-4 py-16 text-center">

@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   try {
     const res = await getAnimeInfo(id);
-    return { title: `${res.data.anime.info.name} - Zoro.tv` };
+    return { title: `${res.anime.info.name} - Zoro.tv` };
   } catch {
     return { title: "Anime - Zoro.tv" };
   }
@@ -31,11 +31,11 @@ export default async function AnimeDetailPage({ params }: Props) {
     notFound();
   }
 
-  const info = animeData.data.anime.info;
-  const moreInfo = animeData.data.anime.moreInfo;
-  const seasons = animeData.data.seasons ?? [];
-  const recommended = animeData.data.recommendedAnimes ?? [];
-  const episodes = episodesData.data.episodes;
+  const info = animeData.anime.info;
+  const moreInfo = animeData.anime.moreInfo;
+  const seasons = animeData.seasons ?? [];
+  const recommended = animeData.recommendedAnimes ?? [];
+  const episodes = episodesData.episodes;
 
   return (
     <div className="space-y-8 pb-12">
