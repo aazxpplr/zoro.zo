@@ -6,24 +6,21 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface Props {
-  params: Promise<{ episodeId: string }>;
+  params: Promise<{ episodeId: string[] }>;
   searchParams: Promise<{ server?: string; category?: string }>;
 }
 
 export async function generateMetadata({ params }: Props) {
   const { episodeId } = await params;
-  return { title: `Watching - ${episodeId} - Zoro.tv` };
+  return { title: `Watching - ${episodeId.join("/")} - Zoro.tv` };
 }
 
 export default async function WatchPage({ params, searchParams }: Props) {
-  const { episodeId } = await params;
-  const { server = "vidstreaming", category = "sub" } = await searchParams;
+  const { episodeId: segments } = await params;
+  const episodeId = segments.join("/");
+  const { server, category = "sub" } = await searchParams;
 
-  // episodeId format is typically "anime-name-id?ep=N" or "anime-id$episode$N"
-  // Extract the anime ID: everything before "?ep=" or the anime slug
-  const animeId = episodeId.includes("?ep=")
-    ? episodeId.split("?ep=")[0]
-    : episodeId.replace(/\$episode\$\d+$/, "");
+  const animeId = episodeId.split("/")[0];
 
   let sources;
   let animeData;
@@ -46,11 +43,8 @@ export default async function WatchPage({ params, searchParams }: Props) {
   const currentEp = currentIdx >= 0 ? episodes[currentIdx] : null;
   const animeInfo = animeData?.anime.info;
 
-  const categories = ["sub", "dub", "raw"];
-
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-6">
-      {/* Breadcrumb */}
       {animeInfo && (
         <div className="flex items-center gap-2 text-sm text-[#71717a]">
           <Link href="/" className="hover:text-[#6c5ce7] transition-colors">Home</Link>
@@ -62,7 +56,6 @@ export default async function WatchPage({ params, searchParams }: Props) {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Player area */}
         <div className="lg:col-span-3 space-y-4">
           <VideoPlayer
             sources={sources.sources}
@@ -71,9 +64,7 @@ export default async function WatchPage({ params, searchParams }: Props) {
             outro={sources.outro}
           />
 
-          {/* Controls */}
           <div className="flex flex-wrap items-center justify-between gap-3 bg-[#16213e] rounded-lg p-3">
-            {/* Prev / Next */}
             <div className="flex gap-2">
               {prevEp ? (
                 <Link
@@ -100,12 +91,11 @@ export default async function WatchPage({ params, searchParams }: Props) {
               )}
             </div>
 
-            {/* Category toggles */}
             <div className="flex gap-1.5">
-              {categories.map((cat) => (
+              {["sub", "dub", "raw"].map((cat) => (
                 <Link
                   key={cat}
-                  href={`/watch/${episodeId}?server=${server}&category=${cat}`}
+                  href={`/watch/${episodeId}?category=${cat}`}
                   className={`px-3 py-1.5 text-xs font-semibold uppercase rounded-md transition-colors ${
                     category === cat
                       ? "bg-[#6c5ce7] text-white"
@@ -118,7 +108,6 @@ export default async function WatchPage({ params, searchParams }: Props) {
             </div>
           </div>
 
-          {/* Episode title */}
           {currentEp && (
             <div className="bg-[#16213e] rounded-lg p-4">
               <p className="text-sm text-[#71717a]">
@@ -131,7 +120,6 @@ export default async function WatchPage({ params, searchParams }: Props) {
             </div>
           )}
 
-          {/* Episode list */}
           {episodes.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-base font-semibold text-white">Episodes</h3>
@@ -140,7 +128,6 @@ export default async function WatchPage({ params, searchParams }: Props) {
           )}
         </div>
 
-        {/* Sidebar */}
         <aside className="space-y-4">
           {animeInfo && (
             <div className="bg-[#16213e] rounded-lg overflow-hidden">
