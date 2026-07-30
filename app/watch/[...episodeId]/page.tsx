@@ -1,6 +1,7 @@
 import { getStreamSources, getAnimeInfo, getEpisodes } from "@/app/lib/api";
 import VideoPlayer from "@/app/components/VideoPlayer";
 import EpisodeList from "@/app/components/EpisodeList";
+import AdBanner from "@/app/components/AdBanner";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -110,6 +111,8 @@ export default async function WatchPage({ params, searchParams }: Props) {
             </div>
           </div>
 
+          <AdBanner slot="watch-below-player" size="leaderboard" />
+
           {currentEp && (
             <div className="bg-[#16213e] rounded-lg p-4">
               <p className="text-sm text-[#71717a]">
@@ -131,6 +134,7 @@ export default async function WatchPage({ params, searchParams }: Props) {
         </div>
 
         <aside className="space-y-4">
+          <AdBanner slot="watch-sidebar-top" size="rectangle" />
           {animeInfo && (
             <div className="bg-[#16213e] rounded-lg overflow-hidden">
               <div className="relative aspect-[3/4] w-full">
@@ -154,6 +158,7 @@ export default async function WatchPage({ params, searchParams }: Props) {
               </div>
             </div>
           )}
+          <AdBanner slot="watch-sidebar-bottom" size="rectangle" />
         </aside>
       </div>
     </div>

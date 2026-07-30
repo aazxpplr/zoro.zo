@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getHome, Anime } from "./lib/api";
 import AnimeCard from "./components/AnimeCard";
+import AdBanner from "./components/AdBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,11 @@ export default async function HomePage() {
     <div className="space-y-12 pb-8">
       {/* Hero Slider */}
       {spotlight.length > 0 && <HeroSection animes={spotlight.slice(0, 5)} />}
+
+      {/* Ad - Below Hero */}
+      <div className="max-w-[1400px] mx-auto px-4">
+        <AdBanner slot="home-top" size="leaderboard" />
+      </div>
 
       {/* Trending */}
       {trending.length > 0 && (
@@ -84,6 +90,11 @@ export default async function HomePage() {
           </div>
         </Section>
       )}
+
+      {/* Ad - Mid Page */}
+      <div className="max-w-[1400px] mx-auto px-4">
+        <AdBanner slot="home-mid" size="banner" />
+      </div>
 
       {/* Top 10 Today */}
       {top10Today.length > 0 && (
