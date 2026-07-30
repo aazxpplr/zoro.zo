@@ -74,14 +74,10 @@ export interface SearchResult {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function cleanTitle(name: string): string {
-  return name.replace(/\s*\(ITA\)\s*/gi, "").replace(/\s*\(SUB ITA\)\s*/gi, "").trim();
-}
-
 function normalizeAnime(item: any): Anime {
   return {
     id: item.id || item.data_id || "",
-    name: cleanTitle(item.name || item.title || ""),
+    name: item.name || item.title || "",
     jname: item.jname || item.japanese_title || "",
     poster: item.poster || "",
     duration: item.duration || item.stats?.duration || "",
@@ -124,7 +120,7 @@ export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
         id: info.id || id,
         anilistId: info.anilistId,
         malId: info.malId,
-        name: cleanTitle(info.name || ""),
+        name: info.name || "",
         poster: info.poster || "",
         description: info.description || "",
         stats: info.stats || {},
