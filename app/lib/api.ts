@@ -1,6 +1,10 @@
-import { HiAnime } from "aniwatch";
+const API_BASE = process.env.ANIME_API_URL || "http://212.147.244.203";
 
-const scraper = new HiAnime.Scraper();
+async function apiFetch(path: string) {
+  const res = await fetch(`${API_BASE}${path}`, { next: { revalidate: 300 } });
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
+}
 
 export interface Anime {
   id: string;
@@ -86,7 +90,7 @@ function normalizeAnime(item: any): Anime {
 
 export async function getHome() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await scraper.getHomePage();
+  const data: any = await apiFetch("/api/home");
   return {
     spotlightAnimes: (data.spotlightAnimes || []).map(normalizeAnime),
     trendingAnimes: (data.trendingAnimes || []).map(normalizeAnime),
@@ -107,7 +111,7 @@ export async function getHome() {
 
 export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await scraper.getInfo(id);
+  const data: any = await apiFetch(`/api/info/${id}`);
   const info = data.anime?.info || {};
   const moreInfo = data.anime?.moreInfo || {};
   return {
@@ -133,7 +137,7 @@ export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
 
 export async function getEpisodes(id: string): Promise<EpisodesData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await scraper.getEpisodes(id);
+  const data: any = await apiFetch(`/api/episodes/${id}`);
   return {
     totalEpisodes: data.totalEpisodes || data.episodes?.length || 0,
     episodes: (data.episodes || []).map((ep: Episode) => ({
@@ -147,7 +151,7 @@ export async function getEpisodes(id: string): Promise<EpisodesData> {
 
 export async function searchAnime(query: string, page = 1): Promise<SearchResult> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await scraper.search(query, page);
+  const data: any = await apiFetch(`/api/search?q=${encodeURIComponent(query)}&page=${page}`);
   return {
     animes: (data.animes || []).map(normalizeAnime),
     mostPopularAnimes: (data.mostPopularAnimes || []).map(normalizeAnime),
@@ -162,12 +166,11 @@ export async function getStreamSources(
   server?: string,
   category?: string
 ): Promise<StreamSource> {
+  const params = new URLSearchParams();
+  if (server) params.set("server", server);
+  if (category) params.set("category", category);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await scraper.getEpisodeSources(
-    episodeId,
-    server as Parameters<typeof scraper.getEpisodeSources>[1],
-    category as Parameters<typeof scraper.getEpisodeSources>[2]
-  );
+  const data: any = await apiFetch(`/api/sources/${episodeId}?${params}`);
   return {
     sources: data.sources || [],
     tracks: data.tracks || [],
