@@ -111,20 +111,28 @@ async function fetcher<T>(endpoint: string): Promise<T> {
 }
 
 export async function getHome(): Promise<HomeData> {
-  return fetcher<HomeData>("/api/v2/hianime/home");
+  return fetcher<HomeData>("/api/v2/hianime/home").catch(() =>
+    fetcher<HomeData>("/api/")
+  );
 }
 
 export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
-  return fetcher<AnimeInfo>(`/api/v2/hianime/anime/${encodeURIComponent(id)}`);
+  return fetcher<AnimeInfo>(`/api/v2/hianime/anime/${encodeURIComponent(id)}`).catch(() =>
+    fetcher<AnimeInfo>(`/api/info?id=${encodeURIComponent(id)}`)
+  );
 }
 
 export async function getEpisodes(id: string): Promise<EpisodesData> {
-  return fetcher<EpisodesData>(`/api/v2/hianime/anime/${encodeURIComponent(id)}/episodes`);
+  return fetcher<EpisodesData>(`/api/v2/hianime/anime/${encodeURIComponent(id)}/episodes`).catch(() =>
+    fetcher<EpisodesData>(`/api/episodes/${encodeURIComponent(id)}`)
+  );
 }
 
 export async function searchAnime(query: string, page = 1): Promise<SearchResult> {
   return fetcher<SearchResult>(
     `/api/v2/hianime/search?q=${encodeURIComponent(query)}&page=${page}`
+  ).catch(() =>
+    fetcher<SearchResult>(`/api/search?keyword=${encodeURIComponent(query)}&page=${page}`)
   );
 }
 
@@ -135,5 +143,7 @@ export async function getStreamSources(
 ): Promise<StreamSource> {
   return fetcher<StreamSource>(
     `/api/v2/hianime/episode/sources?animeEpisodeId=${encodeURIComponent(episodeId)}&server=${server}&category=${category}`
+  ).catch(() =>
+    fetcher<StreamSource>(`/api/stream?id=${encodeURIComponent(episodeId)}&server=${server}&type=${category}`)
   );
 }
