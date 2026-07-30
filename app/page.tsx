@@ -9,15 +9,14 @@ export default async function HomePage() {
   let data;
   try {
     data = await getHome();
-  } catch {
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Unknown error";
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
           <div className="text-6xl">📡</div>
-          <h2 className="text-xl font-semibold text-[#e4e4e7]">Unable to connect to API</h2>
-          <p className="text-sm text-[#71717a]">
-            Set <code className="px-1.5 py-0.5 rounded bg-[#1a1a2e] text-[#6c5ce7]">NEXT_PUBLIC_API_URL</code> in your .env file
-          </p>
+          <h2 className="text-xl font-semibold text-[#e4e4e7]">Unable to load anime data</h2>
+          <p className="text-sm text-[#71717a]">{msg}</p>
         </div>
       </div>
     );
