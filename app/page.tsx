@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getHome } from "./lib/api";
+import { getHome, Anime } from "./lib/api";
 import AnimeCard from "./components/AnimeCard";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +38,7 @@ export default async function HomePage() {
       {trending.length > 0 && (
         <Section title="Trending Now">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin">
-            {trending.slice(0, 10).map((anime, i) => (
+            {trending.slice(0, 10).map((anime: Anime, i: number) => (
               <Link
                 key={anime.id}
                 href={`/anime/${anime.id}`}
@@ -70,7 +70,7 @@ export default async function HomePage() {
       {recent.length > 0 && (
         <Section title="Recent Releases">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {recent.slice(0, 18).map((anime) => (
+            {recent.slice(0, 18).map((anime: Anime) => (
               <AnimeCard
                 key={anime.id}
                 id={anime.id}
@@ -90,7 +90,7 @@ export default async function HomePage() {
       {top10Today.length > 0 && (
         <Section title="Top 10 Today">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {top10Today.slice(0, 10).map((anime) => (
+            {top10Today.slice(0, 10).map((anime: Anime) => (
               <AnimeCard
                 key={anime.id}
                 id={anime.id}
@@ -110,7 +110,7 @@ export default async function HomePage() {
       {popular.length > 0 && (
         <Section title="Most Popular">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {popular.slice(0, 18).map((anime) => (
+            {popular.slice(0, 18).map((anime: Anime) => (
               <AnimeCard
                 key={anime.id}
                 id={anime.id}
