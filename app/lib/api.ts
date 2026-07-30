@@ -74,9 +74,16 @@ export interface SearchResult {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function extractId(raw: string): string {
+  if (!raw) return "";
+  const match = raw.match(/\/anime\/([^/]+)/);
+  if (match) return match[1];
+  return raw.replace(/^https?:\/\/[^/]+\//, "").replace(/\/$/, "");
+}
+
 function normalizeAnime(item: any): Anime {
   return {
-    id: item.id || item.data_id || "",
+    id: extractId(item.id || item.data_id || ""),
     name: item.name || item.title || "",
     jname: item.jname || item.japanese_title || "",
     poster: item.poster || "",
