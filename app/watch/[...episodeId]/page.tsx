@@ -21,6 +21,8 @@ export default async function WatchPage({ params, searchParams }: Props) {
   const { server, category = "sub" } = await searchParams;
 
   const animeId = episodeId.split("/")[0];
+  const seasonMatch = episodeId.match(/staffel-(\d+)/);
+  const season = seasonMatch ? seasonMatch[1] : "1";
 
   let sources;
   let animeData;
@@ -30,7 +32,7 @@ export default async function WatchPage({ params, searchParams }: Props) {
     [sources, animeData, episodesData] = await Promise.all([
       getStreamSources(episodeId, server, category),
       getAnimeInfo(animeId).catch(() => null),
-      getEpisodes(animeId).catch(() => null),
+      getEpisodes(animeId, season).catch(() => null),
     ]);
   } catch {
     notFound();

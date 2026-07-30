@@ -135,9 +135,9 @@ export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
   };
 }
 
-export async function getEpisodes(id: string): Promise<EpisodesData> {
+export async function getEpisodes(id: string, season = "1"): Promise<EpisodesData> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any = await apiFetch(`/api/episodes?id=${encodeURIComponent(id)}`);
+  const data: any = await apiFetch(`/api/episodes?id=${encodeURIComponent(id)}&season=${season}`);
   return {
     totalEpisodes: data.totalEpisodes || data.episodes?.length || 0,
     episodes: (data.episodes || []).map((ep: Episode) => ({
@@ -172,16 +172,8 @@ export async function getStreamSources(
   if (category) params.set("category", category);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any = await apiFetch(`/api/sources?${params}`);
-  const sources = (data.sources || []).map((s: { url: string; type: string }) => {
-    const vpsProxy = "http://212.147.244.203/api/proxy?url=";
-    if (s.url.startsWith(vpsProxy)) {
-      const encoded = s.url.slice(vpsProxy.length);
-      return { ...s, url: `/api/proxy?url=${encoded}` };
-    }
-    return s;
-  });
   return {
-    sources,
+    sources: data.sources || [],
     tracks: data.tracks || [],
     intro: data.intro,
     outro: data.outro,

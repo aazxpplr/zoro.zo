@@ -92,8 +92,8 @@ export default function VideoPlayer({ sources, tracks, intro, outro }: VideoPlay
     return () => video.removeEventListener("timeupdate", onTimeUpdate);
   }, [intro, outro]);
 
-  // If no HLS source exists, try iframe embed (some APIs return iframe URLs)
-  const iframeSrc = !hlsSource && !mp4Source && sources.length > 0 ? sources[0].url : null;
+  const embedSource = sources.find((s) => s.type === "embed");
+  const iframeSrc = embedSource?.url || (!hlsSource && !mp4Source && sources.length > 0 ? sources[0].url : null);
 
   if (iframeSrc) {
     return (
