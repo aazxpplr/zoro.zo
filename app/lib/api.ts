@@ -172,8 +172,16 @@ export async function getStreamSources(
   if (category) params.set("category", category);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data: any = await apiFetch(`/api/sources?${params}`);
+  const sources = (data.sources || []).map((s: { url: string; type: string }) => {
+    const vpsProxy = "http://212.147.244.203/api/proxy?url=";
+    if (s.url.startsWith(vpsProxy)) {
+      const encoded = s.url.slice(vpsProxy.length);
+      return { ...s, url: `/api/proxy?url=${encoded}` };
+    }
+    return s;
+  });
   return {
-    sources: data.sources || [],
+    sources,
     tracks: data.tracks || [],
     intro: data.intro,
     outro: data.outro,
