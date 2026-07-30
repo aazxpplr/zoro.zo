@@ -12,7 +12,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { episodeId } = await params;
-  return { title: `Watching - ${episodeId.join("/")} - Zoro.tv` };
+  return { title: `Watching - ${episodeId.join("/")} - Zoro.zo` };
 }
 
 export default async function WatchPage({ params, searchParams }: Props) {

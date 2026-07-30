@@ -8,7 +8,7 @@ interface Props {
 
 export async function generateMetadata({ searchParams }: Props) {
   const { keyword } = await searchParams;
-  return { title: keyword ? `Search: ${keyword} - Zoro.tv` : "Search - Zoro.tv" };
+  return { title: keyword ? `Search: ${keyword} - Zoro.zo` : "Search - Zoro.zo" };
 }
 
 export default async function SearchPage({ searchParams }: Props) {

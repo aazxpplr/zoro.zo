@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
-  title: "Zoro.tv - Watch Anime Free",
+  title: "Zoro.zo - Watch Anime Free",
   description: "Watch anime online in HD quality for free. Stream the latest and most popular anime series and movies.",
 };
 

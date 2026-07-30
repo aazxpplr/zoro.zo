@@ -16,7 +16,7 @@ export default function Navbar() {
             Z
           </div>
           <span className="text-xl font-bold text-white tracking-tight">
-            Zoro<span className="text-[#6c5ce7]">.tv</span>
+            Zoro<span className="text-[#6c5ce7]">.zo</span>
           </span>
         </Link>
 

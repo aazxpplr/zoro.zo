@@ -10,7 +10,7 @@ export default function Footer() {
               Z
             </div>
             <span className="text-lg font-bold text-white">
-              Zoro<span className="text-[#6c5ce7]">.tv</span>
+              Zoro<span className="text-[#6c5ce7]">.zo</span>
             </span>
           </Link>
           <p className="text-xs text-[#71717a] text-center">

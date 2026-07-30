@@ -32,11 +32,24 @@ export default function VideoPlayer({ sources, tracks, intro, outro }: VideoPlay
           const instance = new Hls({
             maxBufferLength: 30,
             maxMaxBufferLength: 60,
+            xhrSetup: (xhr: XMLHttpRequest) => {
+              xhr.withCredentials = false;
+            },
           });
           instance.loadSource(hlsSource!.url);
           instance.attachMedia(video);
           instance.on(Hls.Events.MANIFEST_PARSED, () => {
             video.play().catch(() => {});
+          });
+          instance.on(Hls.Events.ERROR, (_e: unknown, data: { fatal: boolean; type: string; details: string }) => {
+            console.error("HLS error:", data.type, data.details, data.fatal);
+            if (data.fatal) {
+              if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                instance.startLoad();
+              } else {
+                instance.destroy();
+              }
+            }
           });
           hls = instance;
           setHlsLoaded(true);
@@ -45,8 +58,8 @@ export default function VideoPlayer({ sources, tracks, intro, outro }: VideoPlay
           video!.addEventListener("loadedmetadata", () => video!.play().catch(() => {}));
           setHlsLoaded(true);
         }
-      } catch {
-        // HLS.js not available, fallback to mp4
+      } catch (err) {
+        console.error("HLS init failed:", err);
         if (mp4Source && video) {
           video.src = mp4Source.url;
         }
@@ -103,7 +116,7 @@ export default function VideoPlayer({ sources, tracks, intro, outro }: VideoPlay
         className="w-full h-full"
         controls
         playsInline
-        crossOrigin="anonymous"
+
         src={!hlsSource && mp4Source ? mp4Source.url : undefined}
       >
         {tracks?.map((track, i) => (

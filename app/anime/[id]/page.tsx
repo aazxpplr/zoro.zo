@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   try {
     const res = await getAnimeInfo(id);
-    return { title: `${res.anime.info.name} - Zoro.tv` };
+    return { title: `${res.anime.info.name} - Zoro.zo` };
   } catch {
-    return { title: "Anime - Zoro.tv" };
+    return { title: "Anime - Zoro.zo" };
   }
 }
 
