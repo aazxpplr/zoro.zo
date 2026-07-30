@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getHome } from "./lib/api";
 import AnimeCard from "./components/AnimeCard";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   let data;

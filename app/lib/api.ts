@@ -104,7 +104,7 @@ export interface SearchResult {
 
 async function fetcher<T>(endpoint: string): Promise<T> {
   const res = await fetch(`${API_BASE}${endpoint}`, {
-    next: { revalidate: 300 },
+    cache: "no-store",
   });
   if (!res.ok) throw new Error(`API error: ${res.status} ${res.statusText}`);
   return res.json();
