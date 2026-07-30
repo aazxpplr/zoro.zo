@@ -73,18 +73,29 @@ export interface SearchResult {
   totalPages: number;
 }
 
+function stripIta(name: string): string {
+  return name.replace(/\s*\((?:SUB\s+)?ITA\)\s*/gi, "").trim();
+}
+
+function isItalian(text: string): boolean {
+  if (!text) return false;
+  const words = /\b(della|delle|nella|nelle|degli|anche|questo|questa|sono|essere|hanno|viene|quando|dopo|loro|ogni|tutto|città|però|perché)\b/i;
+  return words.test(text);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeAnime(item: any): Anime {
+  const desc = item.description || "";
   return {
     id: item.id || item.data_id || "",
-    name: item.name || item.title || "",
+    name: stripIta(item.name || item.title || ""),
     jname: item.jname || item.japanese_title || "",
     poster: item.poster || "",
     duration: item.duration || item.stats?.duration || "",
     type: item.type || item.stats?.type || "",
     rating: item.rating || item.stats?.rating || "",
     episodes: item.episodes || item.stats?.episodes,
-    description: item.description || "",
+    description: isItalian(desc) ? "" : desc,
   };
 }
 
@@ -120,9 +131,9 @@ export async function getAnimeInfo(id: string): Promise<AnimeInfo> {
         id: info.id || id,
         anilistId: info.anilistId,
         malId: info.malId,
-        name: info.name || "",
+        name: stripIta(info.name || ""),
         poster: info.poster || "",
-        description: info.description || "",
+        description: isItalian(info.description || "") ? "" : (info.description || ""),
         stats: info.stats || {},
         promotionalVideos: info.promotionalVideos || [],
       },
