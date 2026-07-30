@@ -8,8 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   let data;
   try {
-    const res = await getHome();
-    data = res.data;
+    data = await getHome();
   } catch {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -24,9 +23,9 @@ export default async function HomePage() {
     );
   }
 
-  const spotlight = data.spotlightAnimes ?? data.trendingAnimes ?? [];
+  const spotlight = data.spotlightAnimes?.length ? data.spotlightAnimes : data.trendingAnimes ?? [];
   const recent = data.latestEpisodeAnimes ?? [];
-  const popular = data.mostPopularAnimes ?? data.topAiringAnimes ?? [];
+  const popular = data.mostPopularAnimes?.length ? data.mostPopularAnimes : data.topAiringAnimes ?? [];
   const trending = data.trendingAnimes ?? [];
   const top10Today = data.top10Animes?.today ?? [];
 
